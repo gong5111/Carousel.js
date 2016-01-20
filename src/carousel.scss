@@ -1,0 +1,183 @@
+/*
+  Author: Pontus Östlund <https://profiles.google.com/poppanator>
+*/
+
+$carousel-num-items:      80;
+$carousel-height:         100%;
+$carousel-width:          100%;
+$carousel-text-padding:   .75rem 1.5rem;
+$carousel-indicator-size: 12px;
+
+@mixin carousel-gen-items {
+  @for $i from 1 through $carousel-num-items {
+    &:nth-child(#{$i}) {
+      left: #{($i - 1) * 100%}  ;
+    }
+  }
+}
+
+@mixin carousel-gen-pos() {
+  @for $i from 0 through $carousel-num-items - 1 {
+    &[data-carousel-pos='#{$i}'] {
+      left: -#{$i * 100%};
+    }
+  }
+}
+
+.carousel {
+  overflow: hidden;
+  position: relative;
+  width:    $carousel-width;
+  height:   $carousel-height;
+
+  &.carousel-draggable {
+    overflow-x: auto;
+  }
+
+  &-hidden {
+    display: none;
+  }
+
+  &-slider {
+    position: relative;
+    height: 100%;
+    left: 0;
+
+    &.animate {
+      transition: left .5s ease-in-out;
+    }
+
+    @include carousel-gen-pos;
+  }
+
+  &-item {
+    width:    100%;
+    height:   100%;
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50%;
+
+    &[data-carousel-href] {
+      cursor: pointer;
+    }
+
+    @include carousel-gen-items;
+
+    &-text {
+      padding: $carousel-text-padding;
+      position: absolute;
+      width: 100%;
+      background: rgba(0, 0, 0, .3);
+      color: white;
+      bottom: 0;
+
+      * {
+        margin: 0;
+      }
+    }
+
+    img[data-carousel-src] {
+      display: block;
+    }
+
+    &-keep-img {
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+  }
+
+  &-photo-credit {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: smaller;
+    opacity: .6;
+
+    &::before {
+      content: 'Credit: ';
+      opacity: .6;
+    }
+  }
+
+  &-indicators {
+    position: absolute;
+    bottom: 0;
+    padding: $carousel-text-padding;
+    width: 100%;
+    background: rgba(0, 0, 0, .0);
+    text-align: center;
+    z-index: 2;
+  }
+
+  &-is-touch {
+    .carousel-indicators {
+      bottom: initial;
+      top: -60px;
+      opacity: 0;
+      transition: top .5s ease-out,
+                  opacity .3s ease-out;
+    }
+
+    &drag {
+      .carousel-indicators {
+        top: 0;
+        opacity: 1;
+      }
+    }
+  }
+
+  .carousel-indicator {
+    width: $carousel-indicator-size;
+    height: $carousel-indicator-size;
+    padding: 1px;
+    border-radius: $carousel-indicator-size;
+    border: 1px solid #000;
+    position: relative;
+    display: inline-block;
+    background: transparent;
+    margin: 0 2px;
+    cursor: pointer;
+    transition: transform .2s ease-out;
+
+    &:hover {
+      transform: scale(1.3);
+    }
+
+    &.carousel-indicator-active {
+      .carousel-indicator-inner {
+        opacity: 1;
+      }
+    }
+
+    &-inner {
+      display:       block;
+      width:         100%;
+      height:        100%;
+      border-radius: 100%;
+      background:    rgba(0, 0, 0, .7);
+      opacity:       0;
+      transition:    opacity .3s ease-out;
+    }
+  }
+
+  .carousel-static-text {
+    position: absolute;
+    z-index: 1;
+    background: rgba(0, 0, 0, .3);
+    cursor: default;
+    padding: $carousel-text-padding;
+    color: white;
+    height: 100%;
+    max-width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    h2, h3, p {
+      margin: 0;
+    }
+  }
+}

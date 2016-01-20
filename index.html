@@ -1,0 +1,889 @@
+<!doctype html>
+<html>
+  <head>
+    <meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport">
+    <meta charset="utf-8">
+    <title>Carousel.js - A simple Javascript carousel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/railscasts.min.css">
+    <link rel="stylesheet" href="site/build/demo.min.css">
+    <link rel="stylesheet" href="build/carousel.min.css">
+    <script src="build/carousel.min.js"></script>
+    <script src="site/build/tabs.min.js"></script>
+    <script src="site/build/site.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+    <script>if (hljs) hljs.initHighlightingOnLoad();</script>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="site-width">
+          <div class="col left-col">
+            <h1>Carousel.js</h1>
+            <p>A simple JavaScript carousel</p>
+          </div>
+          <div class="col right-col">
+            <a href="https://github.com/poppa/carousel-js">
+              <i class="fa fa-code-fork"></i> me at <i class="fa fa-github"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class='container intro'><div class='site-width'><p>A simple Javascript carousel with no library dependencies, with lazy image loading and support for multiple image sources for the same item depending on device size.</p><p>This is not a fancy pancy full fledged carousel in any way, and that will never
+be the purpose or goal either. If that&#39;s what you want then check out <a href='http://kenwheeler.github.io/slick/'>Slick</a> instead.</p><hr><h2 id='howto'>Howto</h2><p>The size of the carousel is determined by the size of its outer container. This means
+that the carousel wrapper must have a given height in some way.</p><hr><div class='scrollable'><h3 id='carousel-wrapper'>Carousel wrapper</h3><p>The outer most <code>div</code> element of the carousel that contain all carousel content</p><pre><code class='lang-html'>&lt;div class=&quot;carousel&quot;
+     data-carousel-delay=&quot;8000&quot;
+     data-carousel-indicators=&quot;&quot;
+     data-carousel-touch-threshold=&quot;40%&quot;
+     data-carousel-rubberband-swipe=&quot;1.5&quot;&gt;</code></pre><table><thead><tr><th>Attribute </th><th>Description </th><th>Example</th></tr></thead><tbody><tr><td><code>data-carousel-delay</code> </td><td>Delay in milliseconds between rotations </td><td>10000</td></tr><tr><td><code>data-carousel-indicators</code> </td><td>Add indicators </td><td>No value</td></tr><tr><td><code>data-carousel-touch-threshold</code> </td><td>x distance to swipe before transition starts. Can be either a fixed number (px) or in percent (%) </td><td>100 or 50%</td></tr><tr><td><code>data-carousel-rubberband-swipe</code> </td><td>Give a rubber band effect when swipeing. </td><td>1.5</td></tr><tr><td><code>data-carousel-wrapper</code> </td><td>CSS selector for the outer wrapper. Only used when <code>data-carousel-keep-img</code> and <code>data-carousel-auto-height</code> are used </td><td>.outer-wrapper</td></tr></tbody></table><hr><h3 id='carousel-slider'>Carousel slider</h3><p>This is the first child of the <strong>Carousel wrapper</strong>. This element takes no data attributes</p><pre><code class='lang-html'>&lt;div class=&quot;carousel-slider&quot;&gt;</code></pre><hr><h3 id='carousel-item'>Carousel item</h3><p>This container is the wrapper for every item in the carousel.</p><pre><code class='lang-html'>&lt;div class=&quot;carousel-item&quot;
+     data-carousel-href=&quot;http://domain.com/path/&quot;&gt;</code></pre><table><thead><tr><th>Attribute </th><th>Description </th><th>Example</th></tr></thead><tbody><tr><td><code>data-carousel-href</code> </td><td>URL to goto when the item is clicked </td><td>/internal/path</td></tr><tr><td><code>data-carousel-keep-img</code> </td><td>Don&#39;t put the image as background, show the <code>&lt;img&gt;</code> tag instead </td><td>&quot;(empty)&quot;</td></tr><tr><td><code>data-carousel-auto-height</code> </td><td>Only used when <code>data-carousel-keep-img</code> is set. Will auto-adjust the wrapper height accorning to the height of the <code>&lt;img&gt;</code>. This requires that <code>data-carousel-wrapper</code> is set on the <strong>Carsousel wrapper</strong></td></tr></tbody></table><hr><h3 id='carousel-item-text'>Carousel item text</h3><p>This container can contain any html.</p><pre><code class='lang-html'>&lt;div class=&quot;carousel-item-text&quot;&gt;</code></pre><hr><h3 id='carousel-item-image'>Carousel item image</h3><p>The image tag uses lazy loading so the best thing to do is to set the <code>src</code>
+attribute to point to an empty pixel image or something like that and use
+the <code>carousel-*</code> attributes for the real image sources. The <code>img</code> tag has support
+for arbitrary number of sources for different devices (or strictly speaking
+media width directives).</p><p>The <code>img</code> tag will not be displayed per se, but the <code>src</code> will rather be placed
+as a background image on the <code>carousel-item</code> element. But the <code>img</code> will only be
+visibly hidden and still be accessible for screen readers for which, for
+instance, the <code>alt</code> attribute will serve a purpose.</p><p>If the media directive attributes are used the priciple of mobile first is applied,
+so give the mobile version as value to the <code>data-carousel-src</code> attribute, which is
+the default source attribute.</p><pre><code class='lang-html'>&lt;img src=&quot;empty/pixel.png&quot; alt=&quot;Image description&quot;
+     data-carousel-src=&quot;real-image.jpg&quot;
+     data-carousel-mq-414=&quot;real-tablet-image.jpg&quot;
+     data-carousel-mq-768=&quot;real-desktop-image.jpg&quot;&gt;</code></pre><table><thead><tr><th>Attribute </th><th>Description </th><th>Example</th></tr></thead><tbody><tr><td><code>data-carousel-src</code> </td><td>Default image src </td><td>/images/img1.jpg</td></tr><tr><td><code>data-carousel-mq-(n)</code> </td><td>Alternative image sources. <code>(n)</code> is an arbitrary number which will be set to the media directive <code>@media (min-width: (n)px)</code> </td><td><code>data-carousel-mq-376=&#39;larger-than-iphone6-image.jpg&#39;</code></td></tr><tr><td><code>data-carousel-photo-credit</code> </td><td>Show photo credit </td><td>Robert Capa</td></tr><tr><td><code>data-carousel-photo-credit-mq-(n)</code> </td><td>Like <code>data-carousel-mq-(n)</code> above but for the photo credit. This is only needed if multiple sources are used and <code>(n)</code> should then match <code>(n)</code> of <code>data-carousel-mq-(n)</code> </td><td>Another Photographer</td></tr></tbody></table><h3 id='the-carousel-global-object'>The <code>Carousel</code> global object</h3><p>This object has one static property (<code>null</code> by default) that if set with a
+function that function will be called when a slider item is clicked (if the
+<code>data-carousel-href</code> attribute is used on the item).</p><pre><code class='lang-js'>Carousel.clickBack = function(item) {
+  // Check something....
+  // Return false if you want to abort the click
+  // For instance:
+  if (item.href.indexOf(&#39;http:&#39;) &gt; -1) {
+    window.top.location.href = item.href;
+    return false;
+  }
+}</code></pre></div></div></div>
+    <div class="container p1">
+      <div class="site-width">
+        <h2>Full width <small> with relative height and font size</small></h2>
+        
+    <ul role='tablist'>
+      <li class='active'>
+        <button id='tab-example-1' role='tab'
+                aria-controls='tab-view-example-1'
+                aria-selected='true'>Example</button>
+      </li>
+      <li>
+        <button id='tab-code-1' role='tab'
+                aria-controls='tab-view-code-1'
+                aria-selected='false'>HTML</button>
+      </li>
+      <li>
+        <button id='tab-css-1' role='tab'
+                aria-controls='tab-view-css-1'
+                aria-selected='false'>CSS</button>
+      </li></ul>
+    <div aria-labelledby='tab-example-1'
+         id='tab-view-example-1'
+         role='tabpanel' aria-hidden='false'>
+        <!-- catch(source) -->
+        <div class="outer-jsc"><!-- Implementation specific container -->
+
+          <!-- Begin Carousel -->
+          <div class="carousel"
+               data-carousel-delay="8000"
+               data-carousel-touch-threshold="160"
+               data-carousel-indicators=""
+               data-carousel-wrapper=".outer-jsc">
+
+            <div class="carousel-slider">
+
+              <!-- Begin item -->
+              <div class="carousel-item"
+                   data-carousel-href="https://pike.lysator.liu.se/"
+                   data-carousel-keep-img=""
+                   data-carousel-auto-height="">
+                <img src="images/keep-img-mobile.png"
+                      data-carousel-src="images/keep-img-mobile.png"
+                      data-carousel-mq-768="images/keep-img-desktop.png"
+                      data-carousel-mq-414="images/keep-img-tablet.png"
+                      alt="Image 0">
+              </div>
+              <!-- /End item -->
+
+              <!-- Begin item -->
+              <div class="carousel-item" data-carousel-href="https://pike.lysator.liu.se/">
+                <div class="carousel-item-text">
+                  <h3>Header for the first item</h3>
+                  <p>This is text for the first item</p>
+                </div>
+                <img src="images/img-mobile-1.png"
+                     data-carousel-src="images/img-mobile-1.png"
+                     data-carousel-mq-768="images/img-desktop-1.png"
+                     data-carousel-mq-414="images/img-tablet-1.png"
+                     data-carousel-photo-credit="Robert Capa"
+                     data-carousel-photo-credit-mq-768="Rober Capa (mq-768)"
+                     data-carousel-photo-credit-mq-414="Robert Capa (mq-414)"
+                     alt="Image 1">
+              </div>
+              <!-- /End item -->
+
+              <!-- Begin item -->
+              <div class="carousel-item">
+                  <div class="carousel-item-text">
+                    <h3>Header for the second item</h3>
+                    <p>This is text for the second item</p>
+                  </div>
+                  <img src="images/transparent-pixel.gif"
+                      data-carousel-src="images/img-mobile-2.png"
+                      data-carousel-mq-768="images/img-desktop-2.png"
+                      data-carousel-mq-414="images/img-tablet-2.png"
+                      data-carousel-photo-credit="John Doe"
+                      alt="Image 2">
+                </div>
+                <!-- /End item -->
+
+                <!-- Begin item -->
+                <div class="carousel-item">
+                  <div class="arbitrary-content">
+                    <div class="arbitrary-content-content">
+                      <h2>This is arbitrary <code>HTML</code> content</h2>
+                      <p>In a div I have control over and no one else...</p>
+                      <p>This is not an <code>IMG</code> tag... but this is
+                      a <a href="https://pike.lysator.liu.se">link</a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <!-- /End item -->
+
+                <!-- Begin item -->
+                <div class="carousel-item">
+                  <div class="carousel-item-text">
+                    <h3>Header for the third item</h3>
+                    <p>This is text for the third item</p>
+                  </div>
+                  <img src="images/transparent-pixel.gif"
+                      data-carousel-src="images/img-mobile-3.png"
+                      data-carousel-mq-768="images/img-desktop-3.png"
+                      data-carousel-mq-414="images/img-tablet-3.png"
+                      alt="Image 3">
+                </div>
+                <!-- /End item -->
+
+                <!-- Begin item -->
+                <div class="carousel-item">
+                  <div class="carousel-item-text">
+                    <h3>Header for the fourth item</h3>
+                    <p>This is text for the fourth item</p>
+                  </div>
+                  <img src="images/transparent-pixel.gif"
+                      data-carousel-src="images/img-mobile-4.png"
+                      data-carousel-mq-768="images/img-desktop-4.png"
+                      data-carousel-mq-414="images/img-tablet-4.png"
+                      alt="Image 4">
+                </div>
+                <!-- /End item -->
+
+                <!-- Begin item -->
+                <div class="carousel-item">
+                  <div class="carousel-item-text">
+                    <h3>Header for the fifth item</h3>
+                    <p>This is text for the fifth item</p>
+                  </div>
+                  <img src="images/transparent-pixel.gif"
+                      data-carousel-src="images/img-mobile-5.png"
+                      data-carousel-mq-768="images/img-desktop-5.png"
+                      data-carousel-mq-414="images/img-tablet-5.png"
+                      alt="Image 5">
+                </div>
+                <!-- /End item -->
+
+                <!-- Begin item -->
+                <div class="carousel-item">
+                  <div class="carousel-item-text">
+                    <h3>Header for the sixth item</h3>
+                    <p>This is text for the sixth item</p>
+                  </div>
+                  <img src="images/transparent-pixel.gif"
+                      data-carousel-src="images/img-mobile-6.png"
+                      data-carousel-mq-768="images/img-desktop-6.png"
+                      data-carousel-mq-414="images/img-tablet-6.png"
+                      alt="Image 6">
+                </div>
+                <!-- /End item -->
+
+            </div>
+          </div>
+          <!-- /End Carousel -->
+        </div>
+        <!-- endcatch -->
+        </div>
+    <div aria-labelledby='tab-code-1'
+         id='tab-view-code-1'
+         role='tabpanel' aria-hidden='true'><pre><code class='html'>&lt;div class=&quot;outer-jsc&quot;&gt;&lt;!-- Implementation specific container --&gt;
+
+  &lt;!-- Begin Carousel --&gt;
+  &lt;div class=&quot;carousel&quot;
+       data-carousel-delay=&quot;8000&quot;
+       data-carousel-touch-threshold=&quot;160&quot;
+       data-carousel-indicators=&quot;&quot;
+       data-carousel-wrapper=&quot;.outer-jsc&quot;&gt;
+
+    &lt;div class=&quot;carousel-slider&quot;&gt;
+
+      &lt;!-- Begin item --&gt;
+      &lt;div class=&quot;carousel-item&quot;
+           data-carousel-href=&quot;https://pike.lysator.liu.se/&quot;
+           data-carousel-keep-img=&quot;&quot;
+           data-carousel-auto-height=&quot;&quot;&gt;
+        &lt;img src=&quot;images/keep-img-mobile.png&quot;
+              data-carousel-src=&quot;images/keep-img-mobile.png&quot;
+              data-carousel-mq-768=&quot;images/keep-img-desktop.png&quot;
+              data-carousel-mq-414=&quot;images/keep-img-tablet.png&quot;
+              alt=&quot;Image 0&quot;&gt;
+      &lt;/div&gt;
+      &lt;!-- /End item --&gt;
+
+      &lt;!-- Begin item --&gt;
+      &lt;div class=&quot;carousel-item&quot; data-carousel-href=&quot;https://pike.lysator.liu.se/&quot;&gt;
+        &lt;div class=&quot;carousel-item-text&quot;&gt;
+          &lt;h3&gt;Header for the first item&lt;/h3&gt;
+          &lt;p&gt;This is text for the first item&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;img src=&quot;images/img-mobile-1.png&quot;
+             data-carousel-src=&quot;images/img-mobile-1.png&quot;
+             data-carousel-mq-768=&quot;images/img-desktop-1.png&quot;
+             data-carousel-mq-414=&quot;images/img-tablet-1.png&quot;
+             data-carousel-photo-credit=&quot;Robert Capa&quot;
+             data-carousel-photo-credit-mq-768=&quot;Rober Capa (mq-768)&quot;
+             data-carousel-photo-credit-mq-414=&quot;Robert Capa (mq-414)&quot;
+             alt=&quot;Image 1&quot;&gt;
+      &lt;/div&gt;
+      &lt;!-- /End item --&gt;
+
+      &lt;!-- Begin item --&gt;
+      &lt;div class=&quot;carousel-item&quot;&gt;
+          &lt;div class=&quot;carousel-item-text&quot;&gt;
+            &lt;h3&gt;Header for the second item&lt;/h3&gt;
+            &lt;p&gt;This is text for the second item&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;img src=&quot;images/transparent-pixel.gif&quot;
+              data-carousel-src=&quot;images/img-mobile-2.png&quot;
+              data-carousel-mq-768=&quot;images/img-desktop-2.png&quot;
+              data-carousel-mq-414=&quot;images/img-tablet-2.png&quot;
+              data-carousel-photo-credit=&quot;John Doe&quot;
+              alt=&quot;Image 2&quot;&gt;
+        &lt;/div&gt;
+        &lt;!-- /End item --&gt;
+
+        &lt;!-- Begin item --&gt;
+        &lt;div class=&quot;carousel-item&quot;&gt;
+          &lt;div class=&quot;arbitrary-content&quot;&gt;
+            &lt;div class=&quot;arbitrary-content-content&quot;&gt;
+              &lt;h2&gt;This is arbitrary &lt;code&gt;HTML&lt;/code&gt; content&lt;/h2&gt;
+              &lt;p&gt;In a div I have control over and no one else...&lt;/p&gt;
+              &lt;p&gt;This is not an &lt;code&gt;IMG&lt;/code&gt; tag... but this is
+              a &lt;a href=&quot;https://pike.lysator.liu.se&quot;&gt;link&lt;/a&gt;
+              &lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;!-- /End item --&gt;
+
+        &lt;!-- Begin item --&gt;
+        &lt;div class=&quot;carousel-item&quot;&gt;
+          &lt;div class=&quot;carousel-item-text&quot;&gt;
+            &lt;h3&gt;Header for the third item&lt;/h3&gt;
+            &lt;p&gt;This is text for the third item&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;img src=&quot;images/transparent-pixel.gif&quot;
+              data-carousel-src=&quot;images/img-mobile-3.png&quot;
+              data-carousel-mq-768=&quot;images/img-desktop-3.png&quot;
+              data-carousel-mq-414=&quot;images/img-tablet-3.png&quot;
+              alt=&quot;Image 3&quot;&gt;
+        &lt;/div&gt;
+        &lt;!-- /End item --&gt;
+
+        &lt;!-- Begin item --&gt;
+        &lt;div class=&quot;carousel-item&quot;&gt;
+          &lt;div class=&quot;carousel-item-text&quot;&gt;
+            &lt;h3&gt;Header for the fourth item&lt;/h3&gt;
+            &lt;p&gt;This is text for the fourth item&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;img src=&quot;images/transparent-pixel.gif&quot;
+              data-carousel-src=&quot;images/img-mobile-4.png&quot;
+              data-carousel-mq-768=&quot;images/img-desktop-4.png&quot;
+              data-carousel-mq-414=&quot;images/img-tablet-4.png&quot;
+              alt=&quot;Image 4&quot;&gt;
+        &lt;/div&gt;
+        &lt;!-- /End item --&gt;
+
+        &lt;!-- Begin item --&gt;
+        &lt;div class=&quot;carousel-item&quot;&gt;
+          &lt;div class=&quot;carousel-item-text&quot;&gt;
+            &lt;h3&gt;Header for the fifth item&lt;/h3&gt;
+            &lt;p&gt;This is text for the fifth item&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;img src=&quot;images/transparent-pixel.gif&quot;
+              data-carousel-src=&quot;images/img-mobile-5.png&quot;
+              data-carousel-mq-768=&quot;images/img-desktop-5.png&quot;
+              data-carousel-mq-414=&quot;images/img-tablet-5.png&quot;
+              alt=&quot;Image 5&quot;&gt;
+        &lt;/div&gt;
+        &lt;!-- /End item --&gt;
+
+        &lt;!-- Begin item --&gt;
+        &lt;div class=&quot;carousel-item&quot;&gt;
+          &lt;div class=&quot;carousel-item-text&quot;&gt;
+            &lt;h3&gt;Header for the sixth item&lt;/h3&gt;
+            &lt;p&gt;This is text for the sixth item&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;img src=&quot;images/transparent-pixel.gif&quot;
+              data-carousel-src=&quot;images/img-mobile-6.png&quot;
+              data-carousel-mq-768=&quot;images/img-desktop-6.png&quot;
+              data-carousel-mq-414=&quot;images/img-tablet-6.png&quot;
+              alt=&quot;Image 6&quot;&gt;
+        &lt;/div&gt;
+        &lt;!-- /End item --&gt;
+
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;!-- /End Carousel --&gt;
+&lt;/div&gt;</code></pre></div>
+    <div aria-labelledby='tab-css-1'
+       id='tab-view-css-1'
+       role='tabpanel' aria-hidden='true'><pre><code class='css'>/* scss */
+.outer-jsc {
+  position:   relative;
+  height:     450px;
+  border:     1px solid #fff;
+  margin:     0 auto;
+
+  min-height: 180px;
+  max-height: 450px;
+  height:      40vw;
+
+  background-color: #ddddd5;
+
+  h3 { font-size: 1.6rem; }
+  p { font-size: 1.2rem; }
+
+  @media screen and (min-width: 768px) {
+    h3 { font-size: 2.4rem; }
+    p { font-size: 1.6rem; }
+  }
+}</code></pre></div>
+      </div>
+    </div>
+
+    <!-- catch(css) -->
+    <style type="text/x-example">
+    /* scss */
+    .outer-jsc {
+      position:   relative;
+      height:     450px;
+      border:     1px solid #fff;
+      margin:     0 auto;
+
+      min-height: 180px;
+      max-height: 450px;
+      height:      40vw;
+
+      background-color: #ddddd5;
+
+      h3 { font-size: 1.6rem; }
+      p { font-size: 1.2rem; }
+
+      @media screen and (min-width: 768px) {
+        h3 { font-size: 2.4rem; }
+        p { font-size: 1.6rem; }
+      }
+    }
+    </style>
+    <!-- endcatch -->
+    <div class="container p2">
+      <div class="site-width">
+        <h2>Variable width, height and font size</h2>
+        <p>Various dynamic metrics with some media directives.</p>
+        
+    <ul role='tablist'>
+      <li class='active'>
+        <button id='tab-example-2' role='tab'
+                aria-controls='tab-view-example-2'
+                aria-selected='true'>Example</button>
+      </li>
+      <li>
+        <button id='tab-code-2' role='tab'
+                aria-controls='tab-view-code-2'
+                aria-selected='false'>HTML</button>
+      </li>
+      <li>
+        <button id='tab-css-2' role='tab'
+                aria-controls='tab-view-css-2'
+                aria-selected='false'>CSS</button>
+      </li></ul>
+    <div aria-labelledby='tab-example-2'
+         id='tab-view-example-2'
+         role='tabpanel' aria-hidden='false'>
+        <!-- catch(source) -->
+        <div class="outer-jsc">
+          <div class="carousel"
+               data-carousel-delay="3000"
+               data-carousel-rubberband-swipe="2">
+            <div class="carousel-slider">
+              <div class="carousel-item">
+                <div class="carousel-item-text">
+                  <h3>Header for the first item</h3>
+                  <p>This is text for the first item</p>
+                </div>
+                <img src="images/transparent-pixel.gif"
+                     data-carousel-src="images/img-desktop-1.png"
+                     alt="Image 1">
+              </div>
+              <div class="carousel-item">
+                <div class="carousel-item-text">
+                  <h3>Header for the second item</h3>
+                  <p>This is text for the second item</p>
+                </div>
+                <img src="images/transparent-pixel.gif"
+                     data-carousel-src="images/img-desktop-2.png"
+                     alt="Image 2">
+              </div>
+              <div class="carousel-item">
+                <div class="carousel-item-text">
+                  <h3>Header for the third item</h3>
+                  <p>This is text for the third item</p>
+                </div>
+                <img src="images/transparent-pixel.gif"
+                     data-carousel-src="images/img-desktop-3.png"
+                     alt="Image 3">
+              </div>
+              <div class="carousel-item">
+                <div class="carousel-item-text">
+                  <h3>Header for the fourth item</h3>
+                  <p>This is text for the fourth item</p>
+                </div>
+                <img src="images/transparent-pixel.gif"
+                     data-carousel-src="images/img-desktop-4.png"
+                     alt="Image 4">
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- endcatch -->
+        </div>
+    <div aria-labelledby='tab-code-2'
+         id='tab-view-code-2'
+         role='tabpanel' aria-hidden='true'><pre><code class='html'>&lt;div class=&quot;outer-jsc&quot;&gt;
+  &lt;div class=&quot;carousel&quot;
+       data-carousel-delay=&quot;3000&quot;
+       data-carousel-rubberband-swipe=&quot;2&quot;&gt;
+    &lt;div class=&quot;carousel-slider&quot;&gt;
+      &lt;div class=&quot;carousel-item&quot;&gt;
+        &lt;div class=&quot;carousel-item-text&quot;&gt;
+          &lt;h3&gt;Header for the first item&lt;/h3&gt;
+          &lt;p&gt;This is text for the first item&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;img src=&quot;images/transparent-pixel.gif&quot;
+             data-carousel-src=&quot;images/img-desktop-1.png&quot;
+             alt=&quot;Image 1&quot;&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;carousel-item&quot;&gt;
+        &lt;div class=&quot;carousel-item-text&quot;&gt;
+          &lt;h3&gt;Header for the second item&lt;/h3&gt;
+          &lt;p&gt;This is text for the second item&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;img src=&quot;images/transparent-pixel.gif&quot;
+             data-carousel-src=&quot;images/img-desktop-2.png&quot;
+             alt=&quot;Image 2&quot;&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;carousel-item&quot;&gt;
+        &lt;div class=&quot;carousel-item-text&quot;&gt;
+          &lt;h3&gt;Header for the third item&lt;/h3&gt;
+          &lt;p&gt;This is text for the third item&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;img src=&quot;images/transparent-pixel.gif&quot;
+             data-carousel-src=&quot;images/img-desktop-3.png&quot;
+             alt=&quot;Image 3&quot;&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;carousel-item&quot;&gt;
+        &lt;div class=&quot;carousel-item-text&quot;&gt;
+          &lt;h3&gt;Header for the fourth item&lt;/h3&gt;
+          &lt;p&gt;This is text for the fourth item&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;img src=&quot;images/transparent-pixel.gif&quot;
+             data-carousel-src=&quot;images/img-desktop-4.png&quot;
+             alt=&quot;Image 4&quot;&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    <div aria-labelledby='tab-css-2'
+       id='tab-view-css-2'
+       role='tabpanel' aria-hidden='true'><pre><code class='css'>/* SCSS */
+.outer-jsc {
+  position: relative;
+  border: 1px solid #fff;
+  margin: 0 auto;
+  width: 100%;
+  height: 50vw;
+  max-width: 900px;
+  max-height: 400px;
+
+  @media screen and (min-width: 768px) {
+    width: 50vw;
+    height: 30vw;
+  }
+}
+
+.carousel-item-text {
+  h3 { font-size: 1.8rem; }
+  p { font-size: 1.4rem; }
+
+  @media screen and (min-width: 767px) {
+    h3 { font-size: 2.4vw; }
+    p { font-size: 1.6vw; }
+  }
+
+  @media screen and (min-width: 1160px) {
+    h3 { font-size: 2.4rem; }
+    p { font-size: 1.6rem; }
+  }
+}</code></pre></div>
+      </div>
+    </div>
+
+    <!-- catch(css) -->
+    <style type="text/x-example">
+    /* SCSS */
+    .outer-jsc {
+      position: relative;
+      border: 1px solid #fff;
+      margin: 0 auto;
+      width: 100%;
+      height: 50vw;
+      max-width: 900px;
+      max-height: 400px;
+
+      @media screen and (min-width: 768px) {
+        width: 50vw;
+        height: 30vw;
+      }
+    }
+
+    .carousel-item-text {
+      h3 { font-size: 1.8rem; }
+      p { font-size: 1.4rem; }
+
+      @media screen and (min-width: 767px) {
+        h3 { font-size: 2.4vw; }
+        p { font-size: 1.6vw; }
+      }
+
+      @media screen and (min-width: 1160px) {
+        h3 { font-size: 2.4rem; }
+        p { font-size: 1.6rem; }
+      }
+    }
+    </style>
+    <!-- endcatch -->
+    <div class="container p3">
+      <div class="site-width">
+        <h2>Max width, fixed height</h2>
+        
+    <ul role='tablist'>
+      <li class='active'>
+        <button id='tab-example-3' role='tab'
+                aria-controls='tab-view-example-3'
+                aria-selected='true'>Example</button>
+      </li>
+      <li>
+        <button id='tab-code-3' role='tab'
+                aria-controls='tab-view-code-3'
+                aria-selected='false'>HTML</button>
+      </li>
+      <li>
+        <button id='tab-css-3' role='tab'
+                aria-controls='tab-view-css-3'
+                aria-selected='false'>CSS</button>
+      </li></ul>
+    <div aria-labelledby='tab-example-3'
+         id='tab-view-example-3'
+         role='tabpanel' aria-hidden='false'>
+        <!-- catch(source) -->
+        <div class="outer-jsc">
+          <div class="carousel" data-carousel-delay="8000">
+            <div class="carousel-slider">
+              <div class="carousel-item">
+                <div class="carousel-item-text">
+                  <h3>Header for the first item</h3>
+                  <p>This is text for the first item</p>
+                </div>
+                <img src="images/transparent-pixel.gif"
+                     data-carousel-src="images/img-desktop-1.png"
+                     alt="Image 1" />
+              </div>
+              <div class="carousel-item">
+                <div class="carousel-item-text">
+                  <h3>Header for the second item</h3>
+                  <p>This is text for the second item</p>
+                </div>
+                <img src="images/transparent-pixel.gif"
+                     data-carousel-src="images/img-desktop-2.png"
+                     alt="Image 2" />
+              </div>
+              <div class="carousel-item">
+                <div class="carousel-item-text">
+                  <h3>Header for the third item</h3>
+                  <p>This is text for the third item</p>
+                </div>
+                <img src="images/transparent-pixel.gif"
+                     data-carousel-src="images/img-desktop-3.png"
+                     alt="Image 3" />
+              </div>
+              <div class="carousel-item">
+                <div class="carousel-item-text">
+                  <h3>Header for the fourth item</h3>
+                  <p>This is text for the fourth item</p>
+                </div>
+                <img src="images/transparent-pixel.gif"
+                     data-carousel-src="images/img-desktop-4.png"
+                     alt="Image 4" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- endcatch -->
+        </div>
+    <div aria-labelledby='tab-code-3'
+         id='tab-view-code-3'
+         role='tabpanel' aria-hidden='true'><pre><code class='html'>&lt;div class=&quot;outer-jsc&quot;&gt;
+  &lt;div class=&quot;carousel&quot; data-carousel-delay=&quot;8000&quot;&gt;
+    &lt;div class=&quot;carousel-slider&quot;&gt;
+      &lt;div class=&quot;carousel-item&quot;&gt;
+        &lt;div class=&quot;carousel-item-text&quot;&gt;
+          &lt;h3&gt;Header for the first item&lt;/h3&gt;
+          &lt;p&gt;This is text for the first item&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;img src=&quot;images/transparent-pixel.gif&quot;
+             data-carousel-src=&quot;images/img-desktop-1.png&quot;
+             alt=&quot;Image 1&quot; /&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;carousel-item&quot;&gt;
+        &lt;div class=&quot;carousel-item-text&quot;&gt;
+          &lt;h3&gt;Header for the second item&lt;/h3&gt;
+          &lt;p&gt;This is text for the second item&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;img src=&quot;images/transparent-pixel.gif&quot;
+             data-carousel-src=&quot;images/img-desktop-2.png&quot;
+             alt=&quot;Image 2&quot; /&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;carousel-item&quot;&gt;
+        &lt;div class=&quot;carousel-item-text&quot;&gt;
+          &lt;h3&gt;Header for the third item&lt;/h3&gt;
+          &lt;p&gt;This is text for the third item&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;img src=&quot;images/transparent-pixel.gif&quot;
+             data-carousel-src=&quot;images/img-desktop-3.png&quot;
+             alt=&quot;Image 3&quot; /&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;carousel-item&quot;&gt;
+        &lt;div class=&quot;carousel-item-text&quot;&gt;
+          &lt;h3&gt;Header for the fourth item&lt;/h3&gt;
+          &lt;p&gt;This is text for the fourth item&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;img src=&quot;images/transparent-pixel.gif&quot;
+             data-carousel-src=&quot;images/img-desktop-4.png&quot;
+             alt=&quot;Image 4&quot; /&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    <div aria-labelledby='tab-css-3'
+       id='tab-view-css-3'
+       role='tabpanel' aria-hidden='true'><pre><code class='css'>.outer-jsc {
+  position: relative;
+  border: 1px solid #fff;
+  margin: 0 auto;
+  max-width: 720px;
+  height: 450px;
+}</code></pre></div>
+      </div>
+    </div>
+
+    <!-- catch(css) -->
+    <style type="text/x-example">
+    .outer-jsc {
+      position: relative;
+      border: 1px solid #fff;
+      margin: 0 auto;
+      max-width: 720px;
+      height: 450px;
+    }
+    </style>
+    <!-- endcatch -->
+    <div class="container p4">
+      <div class="site-width">
+        <h2>Same as example 2 <small>but with static text</small></h2>
+        <p>Various dynamic metrics with some media directives.</p>
+        
+    <ul role='tablist'>
+      <li class='active'>
+        <button id='tab-example-4' role='tab'
+                aria-controls='tab-view-example-4'
+                aria-selected='true'>Example</button>
+      </li>
+      <li>
+        <button id='tab-code-4' role='tab'
+                aria-controls='tab-view-code-4'
+                aria-selected='false'>HTML</button>
+      </li>
+      <li>
+        <button id='tab-css-4' role='tab'
+                aria-controls='tab-view-css-4'
+                aria-selected='false'>CSS</button>
+      </li></ul>
+    <div aria-labelledby='tab-example-4'
+         id='tab-view-example-4'
+         role='tabpanel' aria-hidden='false'>
+        <!-- catch(source) -->
+        <div class="outer-jsc">
+          <div class="carousel"
+               data-carousel-delay="6000"
+               data-carousel-indicators=""
+               data-carousel-rubberband-swipe="1.5">
+            <div class="carousel-static-text">
+              <h3>Static text</h3>
+              <p>This text should overlay all slider items.</p>
+            </div>
+            <div class="carousel-slider">
+              <div class="carousel-item" data-carousel-href="http://roxen.com">
+                <img src="images/transparent-pixel.gif"
+                     data-carousel-src="images/img-desktop-1.png"
+                     alt="Image 1">
+              </div>
+              <div class="carousel-item" data-carousel-href="http://download.roxen.com">
+                <img src="images/transparent-pixel.gif"
+                     data-carousel-src="images/img-desktop-2.png"
+                     alt="Image 2">
+              </div>
+              <div class="carousel-item">
+                <img src="images/transparent-pixel.gif"
+                     data-carousel-src="images/img-desktop-3.png"
+                     alt="Image 3">
+              </div>
+              <div class="carousel-item">
+                <img src="images/transparent-pixel.gif"
+                     data-carousel-src="images/img-desktop-4.png"
+                     alt="Image 4">
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- endcatch -->
+        </div>
+    <div aria-labelledby='tab-code-4'
+         id='tab-view-code-4'
+         role='tabpanel' aria-hidden='true'><pre><code class='html'>&lt;div class=&quot;outer-jsc&quot;&gt;
+  &lt;div class=&quot;carousel&quot;
+       data-carousel-delay=&quot;6000&quot;
+       data-carousel-indicators=&quot;&quot;
+       data-carousel-rubberband-swipe=&quot;1.5&quot;&gt;
+    &lt;div class=&quot;carousel-static-text&quot;&gt;
+      &lt;h3&gt;Static text&lt;/h3&gt;
+      &lt;p&gt;This text should overlay all slider items.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;carousel-slider&quot;&gt;
+      &lt;div class=&quot;carousel-item&quot; data-carousel-href=&quot;http://roxen.com&quot;&gt;
+        &lt;img src=&quot;images/transparent-pixel.gif&quot;
+             data-carousel-src=&quot;images/img-desktop-1.png&quot;
+             alt=&quot;Image 1&quot;&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;carousel-item&quot; data-carousel-href=&quot;http://download.roxen.com&quot;&gt;
+        &lt;img src=&quot;images/transparent-pixel.gif&quot;
+             data-carousel-src=&quot;images/img-desktop-2.png&quot;
+             alt=&quot;Image 2&quot;&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;carousel-item&quot;&gt;
+        &lt;img src=&quot;images/transparent-pixel.gif&quot;
+             data-carousel-src=&quot;images/img-desktop-3.png&quot;
+             alt=&quot;Image 3&quot;&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;carousel-item&quot;&gt;
+        &lt;img src=&quot;images/transparent-pixel.gif&quot;
+             data-carousel-src=&quot;images/img-desktop-4.png&quot;
+             alt=&quot;Image 4&quot;&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></div>
+    <div aria-labelledby='tab-css-4'
+       id='tab-view-css-4'
+       role='tabpanel' aria-hidden='true'><pre><code class='css'>/* SCSS */
+.outer-jsc {
+  position: relative;
+  border: 1px solid #fff;
+  margin: 0 auto;
+  width: 100%;
+  height: 50vw;
+  max-width: 900px;
+  max-height: 400px;
+
+  @media screen and (min-width: 768px) {
+    width: 50vw;
+    height: 30vw;
+  }
+}
+
+.carousel-item-text {
+  h3 { font-size: 1.8rem; }
+  p { font-size: 1.4rem; }
+
+  @media screen and (min-width: 767px) {
+    h3 { font-size: 2.4vw; }
+    p { font-size: 1.6vw; }
+  }
+
+  @media screen and (min-width: 1160px) {
+    h3 { font-size: 2.4rem; }
+    p { font-size: 1.6rem; }
+  }
+}</code></pre></div>
+      </div>
+    </div>
+
+    <!-- catch(css) -->
+    <style type="text/x-example">
+    /* SCSS */
+    .outer-jsc {
+      position: relative;
+      border: 1px solid #fff;
+      margin: 0 auto;
+      width: 100%;
+      height: 50vw;
+      max-width: 900px;
+      max-height: 400px;
+
+      @media screen and (min-width: 768px) {
+        width: 50vw;
+        height: 30vw;
+      }
+    }
+
+    .carousel-item-text {
+      h3 { font-size: 1.8rem; }
+      p { font-size: 1.4rem; }
+
+      @media screen and (min-width: 767px) {
+        h3 { font-size: 2.4vw; }
+        p { font-size: 1.6vw; }
+      }
+
+      @media screen and (min-width: 1160px) {
+        h3 { font-size: 2.4rem; }
+        p { font-size: 1.6rem; }
+      }
+    }
+    </style>
+    <!-- endcatch -->
+  </body>
+</html>
